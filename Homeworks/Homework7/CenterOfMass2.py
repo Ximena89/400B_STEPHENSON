@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[12]:
+# In[10]:
 
 
 # Homework 4
@@ -12,7 +12,7 @@
 # ### Keep in mind this is just a template; you don't need to follow every step and feel free to change anything.
 # ### We also strongly encourage you to try to develop your own method to solve the homework.
 
-# In[13]:
+# In[11]:
 
 
 # import modules
@@ -23,7 +23,7 @@ import astropy.table as tbl
 from ReadFile import Read
 
 
-# In[14]:
+# In[12]:
 
 
 class CenterOfMass:
@@ -82,7 +82,7 @@ class CenterOfMass:
  
 
    
-    def COM_P(self, delta):
+    def COM_P(self, delta, VolDec):
     # Function to specifically return the center of mass position and velocity                                         
     # input:                                                                                                           
     #        particle type (1,2,3)                                                                                     
@@ -113,7 +113,7 @@ class CenterOfMass:
 
         # find the max 3D distance of all particles from the guessed COM                                               
         # will re-start at half that radius (reduced radius)                                                           
-        RMAX = max(RNEW)/2.0
+        RMAX = max(RNEW)/VolDec
         
         # pick an initial value for the change in COM position                                                      
         # between the first guess above and the new one computed from half that volume
@@ -154,7 +154,7 @@ class CenterOfMass:
             # Before loop continues, reset : RMAX, particle separations and COM                                        
 
             # reduce the volume by a factor of 2 again                                                                 
-            RMAX = RMAX/2.0
+            RMAX = RMAX/VolDec
             # check this. 
             #print ("maxR", RMAX)
 
@@ -243,65 +243,65 @@ M33COM = CenterOfMass("M33_000.txt", 2)
 # In[16]:
 
 
-# MW:   store the position and velocity COM                                                                            
-MW_COM_P = MWCOM.COM_P(0.1)
-MW_COM_V = MWCOM.COM_V(MW_COM_P[0],MW_COM_P[1],MW_COM_P[2])
+# # MW:   store the position and velocity COM                                                                            
+# MW_COM_P = MWCOM.COM_P(0.1)
+# MW_COM_V = MWCOM.COM_V(MW_COM_P[0],MW_COM_P[1],MW_COM_P[2])
 
-# M31:   store the position and velocity COM                                                                           
-M31_COM_P = M31COM.COM_P(0.1)
-M31_COM_V = M31COM.COM_V(M31_COM_P[0],M31_COM_P[1],M31_COM_P[2])
+# # M31:   store the position and velocity COM                                                                           
+# M31_COM_P = M31COM.COM_P(0.1)
+# M31_COM_V = M31COM.COM_V(M31_COM_P[0],M31_COM_P[1],M31_COM_P[2])
 
 
-# M33:   store the position and velocity COM                                                                           
-M33_COM_P = M33COM.COM_P(0.1)
-M33_COM_V = M33COM.COM_V(M33_COM_P[0],M33_COM_P[1],M33_COM_P[2])
+# # M33:   store the position and velocity COM                                                                           
+# M33_COM_P = M33COM.COM_P(0.1)
+# M33_COM_V = M33COM.COM_V(M33_COM_P[0],M33_COM_P[1],M33_COM_P[2])
 
 
 # In[17]:
 
 
-# Making the Table of Results
+# # Making the Table of Results
 
-# we first gather all results and put them into a numpy array
-# *tuple() will extract the tuple, kind of like C-language
-tab_results = ['MW COM', *tuple(MW_COM_P.value), *tuple(MW_COM_V.value), 
-               'M31 COM', *tuple(M31_COM_P.value), *tuple(M31_COM_V.value), 
-               'M33 COM', *tuple(M33_COM_P.value), *tuple(M33_COM_V.value)]
-tab_results = np.reshape(tab_results, (3, 7)) # convert 1D array to 2D
+# # we first gather all results and put them into a numpy array
+# # *tuple() will extract the tuple, kind of like C-language
+# tab_results = ['MW COM', *tuple(MW_COM_P.value), *tuple(MW_COM_V.value), 
+#                'M31 COM', *tuple(M31_COM_P.value), *tuple(M31_COM_V.value), 
+#                'M33 COM', *tuple(M33_COM_P.value), *tuple(M33_COM_V.value)]
+# tab_results = np.reshape(tab_results, (3, 7)) # convert 1D array to 2D
 
-# make and display the table with astropy
-t = tbl.Table(tab_results, 
-              names = ['Galaxy', 'X-component (kpc)', 'Y-Component (kpc)', 
-                       'Z-Component (kpc)','VX-component (km/s)', 
-                       'VY-Component (km/s)', 'VZ-Component (km/s)'])
-t.show_in_notebook()
-
-
-# In[18]:
+# # make and display the table with astropy
+# t = tbl.Table(tab_results, 
+#               names = ['Galaxy', 'X-component (kpc)', 'Y-Component (kpc)', 
+#                        'Z-Component (kpc)','VX-component (km/s)', 
+#                        'VY-Component (km/s)', 'VZ-Component (km/s)'])
+# t.show_in_notebook()
 
 
-# Q2 
-# Determine the separation between the MW and M31                                                                      
-MW_M31 = np.sqrt((M31_COM_P[0]-MW_COM_P[0])**2 + (M31_COM_P[1]-MW_COM_P[1])**2 + (M31_COM_P[2]-MW_COM_P[2])**2)
-print("Separation between the MW and M31 =", np.round(MW_M31))
-
-# Determine the relative velocity between the MW and M31                                                                      
-vMW_M31 = np.sqrt((M31_COM_V[0]-MW_COM_V[0])**2 + (M31_COM_V[1]-MW_COM_V[1])**2 + (M31_COM_V[2]-MW_COM_V[2])**2)
-print("Relative Velocity between the MW and M31 =", np.round(vMW_M31))
+# In[ ]:
 
 
-# In[19]:
+# # Q2 
+# # Determine the separation between the MW and M31                                                                      
+# MW_M31 = np.sqrt((M31_COM_P[0]-MW_COM_P[0])**2 + (M31_COM_P[1]-MW_COM_P[1])**2 + (M31_COM_P[2]-MW_COM_P[2])**2)
+# print("Separation between the MW and M31 =", np.round(MW_M31))
+
+# # Determine the relative velocity between the MW and M31                                                                      
+# vMW_M31 = np.sqrt((M31_COM_V[0]-MW_COM_V[0])**2 + (M31_COM_V[1]-MW_COM_V[1])**2 + (M31_COM_V[2]-MW_COM_V[2])**2)
+# print("Relative Velocity between the MW and M31 =", np.round(vMW_M31))
 
 
-# Q3
-# Determine the relative position between M33 and M31                                                                  
-M33_M31 = np.sqrt((M33_COM_P[0]-M31_COM_P[0])**2 + (M33_COM_P[1]-M31_COM_P[1])**2 + (M33_COM_P[2]-M31_COM_P[2])**2)
-print("Relative Position between M33 and M31 = ", np.round(M33_M31))
+# In[ ]:
 
 
-# Determine the relative velocity between M33 and M31                                                                  
-vM33_M31 = np.sqrt((M33_COM_V[0]-M31_COM_V[0])**2 + (M33_COM_V[1]-M31_COM_V[1])**2 + (M33_COM_V[2]-M31_COM_V[2])**2)
-print("Relative Velocity between M33 and M31 = ", np.round(vM33_M31))
+# # Q3
+# # Determine the relative position between M33 and M31                                                                  
+# M33_M31 = np.sqrt((M33_COM_P[0]-M31_COM_P[0])**2 + (M33_COM_P[1]-M31_COM_P[1])**2 + (M33_COM_P[2]-M31_COM_P[2])**2)
+# print("Relative Position between M33 and M31 = ", np.round(M33_M31))
+
+
+# # Determine the relative velocity between M33 and M31                                                                  
+# vM33_M31 = np.sqrt((M33_COM_V[0]-M31_COM_V[0])**2 + (M33_COM_V[1]-M31_COM_V[1])**2 + (M33_COM_V[2]-M31_COM_V[2])**2)
+# print("Relative Velocity between M33 and M31 = ", np.round(vM33_M31))
 
 
 # Q4: The iterative procedue is necessary because as galaxies interact their stars get thrown to large radii with different speeds. Tidal tails are not spherically symmetric; this can cause the COM position calculation to be really off if you are using all the particles at large radii.
